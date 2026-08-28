@@ -1,6 +1,6 @@
 # AI Credit Risk & Loan Decision Support System
 
-Python · scikit-learn · XGBoost · Explainable AI (TreeSHAP)
+Python · scikit-learn · XGBoost · Explainable AI (TreeSHAP) · MIT License
 
 A **decision-support** workbench for personal-loan underwriters. An XGBoost classifier estimates 12-month default risk from credit history and financial attributes. TreeSHAP surfaces the borrower features that moved the score. A separate policy layer maps that probability onto approve / refer / decline. **A person still records the decision.**
 
