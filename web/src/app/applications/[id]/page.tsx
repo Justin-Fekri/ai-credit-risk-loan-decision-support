@@ -1,9 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { api, type Application } from "@/lib/api";
+import { notFound } from "next/navigation";
+import { serverApi } from "@/lib/server-api";
 import { BorrowerFacts } from "@/components/borrower-facts";
 import { DecisionPanel } from "@/components/decision-panel";
 import { PdMeter } from "@/components/pd-meter";
@@ -11,35 +8,19 @@ import { RecBadge, RiskBadge } from "@/components/risk-badge";
 import { ShapChart } from "@/components/shap-chart";
 import { money } from "@/lib/format";
 
-export default function ApplicationPage() {
-  const params = useParams<{ id: string }>();
-  const [app, setApp] = useState<Application | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export const dynamic = "force-dynamic";
 
-  useEffect(() => {
-    if (!params.id) return;
-    api
-      .application(params.id)
-      .then(setApp)
-      .catch((err) =>
-        setError(err instanceof Error ? err.message : "File could not be opened.")
-      );
-  }, [params.id]);
-
-  if (error) {
-    return (
-      <div className="rounded-xl border border-dashed border-border p-8">
-        <h2 className="font-heading text-2xl">File not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">{error}</p>
-        <Link href="/" className="mt-4 inline-flex h-8 items-center rounded-lg bg-primary px-3 text-sm text-primary-foreground">
-          Back to queue
-        </Link>
-      </div>
-    );
-  }
-
-  if (!app) {
-    return <p className="text-sm text-muted-foreground">Opening file…</p>;
+export default async function ApplicationPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  let app;
+  try {
+    app = await serverApi.application(id);
+  } catch {
+    notFound();
   }
 
   return (

@@ -1,37 +1,24 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { api, type QueueResponse } from "@/lib/api";
+import { serverApi } from "@/lib/server-api";
+import type { QueueResponse } from "@/lib/api";
 import { RecBadge, RiskBadge } from "@/components/risk-badge";
 import { money, pct } from "@/lib/format";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function QueuePage() {
-  const [data, setData] = useState<QueueResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export const dynamic = "force-dynamic";
 
-  useEffect(() => {
-    api
-      .queue()
-      .then(setData)
-      .catch((err) =>
-        setError(err instanceof Error ? err.message : "Could not load the queue.")
-      );
-  }, []);
-
-  if (error) {
+export default async function QueuePage() {
+  let data: QueueResponse;
+  try {
+    data = await serverApi.queue();
+  } catch (err) {
     return (
       <EmptyState
         title="Queue unavailable"
-        body="Start the Python API on port 45232, then refresh. The workbench proxies /backend to that service."
-        detail={error}
+        body="Start the Python API on port 45232, then refresh. The workbench reads the scoring service directly."
+        detail={err instanceof Error ? err.message : String(err)}
       />
     );
-  }
-
-  if (!data) {
-    return <p className="text-sm text-muted-foreground">Loading today’s book…</p>;
   }
 
   const pending = data.items.filter((item) => item.status === "pending");
@@ -98,7 +85,7 @@ function FileTable({
   return (
     <section>
       <h3 className="mb-3 font-heading text-2xl">{caption}</h3>
-      <div className="overflow-hidden rounded-xl border border-border bg-card">
+      <div className="overflow-x-auto rounded-xl border border-border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted/60 text-left text-[11px] tracking-[0.12em] uppercase text-muted-foreground">
             <tr>
