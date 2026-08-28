@@ -1,0 +1,19 @@
+{
+  "application_id": "APP-DEMO-LOW",
+  "age": 47,
+  "annual_income": 118000,
+  "employment_length": 16.0,
+  "loan_amount": 9000,
+  "loan_term_months": 24,
+  "interest_rate": 7.2,
+  "debt_to_income": 0.14,
+  "credit_score": 788,
+  "num_open_accounts": 4,
+  "num_past_delinquencies": 0,
+  "credit_history_length": 24.0,
+  "revolving_utilization": 0.08,
+  "home_ownership": "MORTGAGE",
+  "loan_purpose": "home_improvement",
+  "employment_status": "employed",
+  "education": "bachelors"
+}

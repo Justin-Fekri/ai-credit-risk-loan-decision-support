@@ -1,0 +1,19 @@
+{
+  "application_id": "APP-DEMO-HIGH",
+  "age": 24,
+  "annual_income": 31000,
+  "employment_length": 0.5,
+  "loan_amount": 22000,
+  "loan_term_months": 60,
+  "interest_rate": 24.5,
+  "debt_to_income": 0.68,
+  "credit_score": 561,
+  "num_open_accounts": 9,
+  "num_past_delinquencies": 3,
+  "credit_history_length": 2.0,
+  "revolving_utilization": 0.94,
+  "home_ownership": "RENT",
+  "loan_purpose": "debt_consolidation",
+  "employment_status": "part_time",
+  "education": "high_school"
+}

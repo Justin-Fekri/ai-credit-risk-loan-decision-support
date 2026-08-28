@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Generated artifacts -- reproducible via the CLI, so not tracked
+data/*.csv
+!data/.gitkeep
+models/*.joblib
+!models/.gitkeep
+reports/*.png
+reports/*.json
+reports/*.csv
+!reports/.gitkeep
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Local editor/tooling config
+.claude/

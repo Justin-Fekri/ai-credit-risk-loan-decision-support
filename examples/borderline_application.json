@@ -1,0 +1,19 @@
+{
+  "application_id": "APP-DEMO-BORDERLINE",
+  "age": 35,
+  "annual_income": 62000,
+  "employment_length": 4.0,
+  "loan_amount": 16000,
+  "loan_term_months": 36,
+  "interest_rate": 14.8,
+  "debt_to_income": 0.41,
+  "credit_score": 668,
+  "num_open_accounts": 6,
+  "num_past_delinquencies": 1,
+  "credit_history_length": 9.0,
+  "revolving_utilization": 0.52,
+  "home_ownership": "RENT",
+  "loan_purpose": "credit_card",
+  "employment_status": "self_employed",
+  "education": "bachelors"
+}
