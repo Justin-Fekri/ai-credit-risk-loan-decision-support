@@ -1,0 +1,11 @@
+{
+  "name": "Northbridge default-risk XGBoost",
+  "task": "binary classification \u2014 12-month default",
+  "algorithm": "XGBoost (hist) inside a scikit-learn ColumnTransformer pipeline",
+  "explainability": "TreeSHAP, interventional, probability output, grouped to original features",
+  "training_rows": 9600,
+  "test_rows": 2400,
+  "positive_rate_train": 0.2013,
+  "decision_support": true,
+  "automated_decisioning": false
+}
