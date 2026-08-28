@@ -1,34 +1,22 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { api, type ModelResponse } from "@/lib/api";
+import { serverApi } from "@/lib/server-api";
 import { pct } from "@/lib/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function ModelPage() {
-  const [data, setData] = useState<ModelResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export const dynamic = "force-dynamic";
 
-  useEffect(() => {
-    api
-      .model()
-      .then(setData)
-      .catch((err) =>
-        setError(err instanceof Error ? err.message : "Model card unavailable.")
-      );
-  }, []);
-
-  if (error) {
+export default async function ModelPage() {
+  let data;
+  try {
+    data = await serverApi.model();
+  } catch (err) {
     return (
       <div className="rounded-xl border border-dashed p-8">
         <h2 className="font-heading text-2xl">Model card unavailable</h2>
-        <p className="mt-2 text-sm text-muted-foreground">{error}</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {err instanceof Error ? err.message : "Could not reach the scoring service."}
+        </p>
       </div>
     );
-  }
-
-  if (!data) {
-    return <p className="text-sm text-muted-foreground">Loading model card…</p>;
   }
 
   const maxImp = Math.max(...data.global_importance.map((row) => row.mean_abs_shap), 0.001);
