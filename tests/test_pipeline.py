@@ -1,6 +1,7 @@
 from credit_risk.data import generate_borrowers
 from credit_risk.pipeline import fit_bundle, predict_pd
 from credit_risk.policy import recommend, risk_band
+from credit_risk.train import subgroup_diagnostics
 
 
 def test_generate_borrowers_has_required_columns():
@@ -36,3 +37,11 @@ def test_policy_gates():
     assert action == "decline"
     assert risk_band(0.06) == "low"
     assert risk_band(0.50) == "severe"
+
+
+def test_subgroup_diagnostics_cover_audit_groups():
+    frame = generate_borrowers(400, seed=4)
+    diagnostics = subgroup_diagnostics(frame, frame["defaulted"].to_numpy(dtype=float))
+    assert {row["group"] for row in diagnostics["age_band"]} == {"21-34", "35-49", "50+"}
+    assert sum(row["n"] for row in diagnostics["age_band"]) == len(frame)
+    assert diagnostics["employment_status"]

@@ -1,19 +1,19 @@
 {
-  "roc_auc": 0.7973,
-  "gini": 0.5946,
-  "pr_auc": 0.5706,
-  "brier": 0.1686,
-  "ks": 0.4632,
+  "roc_auc": 0.7987,
+  "gini": 0.5973,
+  "pr_auc": 0.5722,
+  "brier": 0.1691,
+  "ks": 0.4627,
   "threshold": 0.5,
-  "precision": 0.4434,
-  "recall": 0.6729,
-  "f1": 0.5345,
+  "precision": 0.4295,
+  "recall": 0.6625,
+  "f1": 0.5212,
   "default_rate": 0.2013,
   "confusion": {
-    "tn": 1509,
-    "fp": 408,
-    "fn": 158,
-    "tp": 325
+    "tn": 1492,
+    "fp": 425,
+    "fn": 163,
+    "tp": 320
   },
   "roc_curve": [
     {
@@ -21,169 +21,231 @@
       "tpr": 0.0
     },
     {
-      "fpr": 0.0031,
-      "tpr": 0.1263
+      "fpr": 0.0037,
+      "tpr": 0.0994
     },
     {
-      "fpr": 0.0104,
-      "tpr": 0.1656
+      "fpr": 0.0083,
+      "tpr": 0.1594
     },
     {
-      "fpr": 0.0151,
-      "tpr": 0.2133
+      "fpr": 0.013,
+      "tpr": 0.1988
     },
     {
-      "fpr": 0.0203,
-      "tpr": 0.2464
+      "fpr": 0.0193,
+      "tpr": 0.2422
     },
     {
-      "fpr": 0.0256,
-      "tpr": 0.2712
+      "fpr": 0.0276,
+      "tpr": 0.2692
     },
     {
       "fpr": 0.0339,
-      "tpr": 0.3126
+      "tpr": 0.294
     },
     {
-      "fpr": 0.0402,
-      "tpr": 0.3395
+      "fpr": 0.0407,
+      "tpr": 0.3292
     },
     {
-      "fpr": 0.0464,
-      "tpr": 0.3602
+      "fpr": 0.0475,
+      "tpr": 0.3561
     },
     {
-      "fpr": 0.06,
-      "tpr": 0.3975
+      "fpr": 0.0532,
+      "tpr": 0.3872
     },
     {
-      "fpr": 0.0657,
-      "tpr": 0.4306
+      "fpr": 0.061,
+      "tpr": 0.4161
     },
     {
-      "fpr": 0.0777,
-      "tpr": 0.4534
+      "fpr": 0.0689,
+      "tpr": 0.4369
     },
     {
-      "fpr": 0.0876,
+      "fpr": 0.0751,
       "tpr": 0.4783
     },
     {
-      "fpr": 0.0981,
+      "fpr": 0.084,
       "tpr": 0.501
     },
     {
-      "fpr": 0.1038,
-      "tpr": 0.5321
+      "fpr": 0.0991,
+      "tpr": 0.5217
     },
     {
-      "fpr": 0.1168,
-      "tpr": 0.559
+      "fpr": 0.1075,
+      "tpr": 0.5445
     },
     {
-      "fpr": 0.1346,
-      "tpr": 0.5797
+      "fpr": 0.1184,
+      "tpr": 0.5673
     },
     {
-      "fpr": 0.1471,
-      "tpr": 0.5983
+      "fpr": 0.1294,
+      "tpr": 0.5901
     },
     {
-      "fpr": 0.1628,
-      "tpr": 0.619
+      "fpr": 0.157,
+      "tpr": 0.6087
     },
     {
-      "fpr": 0.1789,
-      "tpr": 0.6377
+      "fpr": 0.1711,
+      "tpr": 0.6273
     },
     {
-      "fpr": 0.1941,
-      "tpr": 0.6563
+      "fpr": 0.2008,
+      "tpr": 0.648
     },
     {
-      "fpr": 0.2118,
-      "tpr": 0.6729
+      "fpr": 0.2233,
+      "tpr": 0.6667
     },
     {
-      "fpr": 0.2332,
-      "tpr": 0.6874
+      "fpr": 0.2415,
+      "tpr": 0.6812
     },
     {
-      "fpr": 0.2514,
-      "tpr": 0.7019
+      "fpr": 0.2723,
+      "tpr": 0.706
     },
     {
-      "fpr": 0.2702,
-      "tpr": 0.7164
+      "fpr": 0.2853,
+      "tpr": 0.7226
     },
     {
-      "fpr": 0.2885,
+      "fpr": 0.2968,
       "tpr": 0.7371
     },
     {
-      "fpr": 0.3156,
+      "fpr": 0.3135,
       "tpr": 0.7536
     },
     {
-      "fpr": 0.3412,
-      "tpr": 0.7723
+      "fpr": 0.3224,
+      "tpr": 0.7681
     },
     {
-      "fpr": 0.3573,
-      "tpr": 0.7867
+      "fpr": 0.3542,
+      "tpr": 0.7909
     },
     {
-      "fpr": 0.3818,
-      "tpr": 0.8054
+      "fpr": 0.3824,
+      "tpr": 0.8075
     },
     {
-      "fpr": 0.4371,
-      "tpr": 0.8199
+      "fpr": 0.4382,
+      "tpr": 0.8219
     },
     {
-      "fpr": 0.4601,
-      "tpr": 0.8344
+      "fpr": 0.4669,
+      "tpr": 0.8364
     },
     {
-      "fpr": 0.4862,
-      "tpr": 0.8489
+      "fpr": 0.4846,
+      "tpr": 0.8509
     },
     {
-      "fpr": 0.519,
-      "tpr": 0.8654
+      "fpr": 0.517,
+      "tpr": 0.8696
     },
     {
-      "fpr": 0.5477,
-      "tpr": 0.8799
+      "fpr": 0.5498,
+      "tpr": 0.8841
     },
     {
-      "fpr": 0.5816,
-      "tpr": 0.9027
+      "fpr": 0.5858,
+      "tpr": 0.8986
     },
     {
-      "fpr": 0.638,
-      "tpr": 0.9172
+      "fpr": 0.6255,
+      "tpr": 0.913
     },
     {
-      "fpr": 0.6682,
-      "tpr": 0.9337
+      "fpr": 0.6651,
+      "tpr": 0.9275
     },
     {
-      "fpr": 0.7433,
-      "tpr": 0.9482
+      "fpr": 0.7058,
+      "tpr": 0.942
     },
     {
-      "fpr": 0.8028,
-      "tpr": 0.9627
+      "fpr": 0.7621,
+      "tpr": 0.9565
     },
     {
-      "fpr": 0.8858,
-      "tpr": 0.9814
+      "fpr": 0.8153,
+      "tpr": 0.971
     },
     {
-      "fpr": 0.9484,
-      "tpr": 1.0
+      "fpr": 0.8529,
+      "tpr": 0.9855
     }
   ],
-  "n_test": 2400
+  "n_test": 2400,
+  "subgroup_diagnostics": {
+    "age_band": [
+      {
+        "group": "21-34",
+        "n": 659,
+        "observed_default_rate": 0.2716,
+        "mean_predicted_pd": 0.4801,
+        "true_positive_rate": 0.7263,
+        "false_positive_rate": 0.3333
+      },
+      {
+        "group": "35-49",
+        "n": 751,
+        "observed_default_rate": 0.221,
+        "mean_predicted_pd": 0.4317,
+        "true_positive_rate": 0.6988,
+        "false_positive_rate": 0.2598
+      },
+      {
+        "group": "50+",
+        "n": 990,
+        "observed_default_rate": 0.1394,
+        "mean_predicted_pd": 0.3177,
+        "true_positive_rate": 0.5362,
+        "false_positive_rate": 0.1326
+      }
+    ],
+    "employment_status": [
+      {
+        "group": "employed",
+        "n": 1724,
+        "observed_default_rate": 0.1769,
+        "mean_predicted_pd": 0.3817,
+        "true_positive_rate": 0.6492,
+        "false_positive_rate": 0.2086
+      },
+      {
+        "group": "retired",
+        "n": 181,
+        "observed_default_rate": 0.2155,
+        "mean_predicted_pd": 0.3824,
+        "true_positive_rate": 0.5385,
+        "false_positive_rate": 0.2113
+      },
+      {
+        "group": "self_employed",
+        "n": 334,
+        "observed_default_rate": 0.2006,
+        "mean_predicted_pd": 0.3744,
+        "true_positive_rate": 0.6269,
+        "false_positive_rate": 0.1723
+      },
+      {
+        "group": "unemployed",
+        "n": 161,
+        "observed_default_rate": 0.4472,
+        "mean_predicted_pd": 0.6383,
+        "true_positive_rate": 0.8194,
+        "false_positive_rate": 0.5955
+      }
+    ]
+  }
 }

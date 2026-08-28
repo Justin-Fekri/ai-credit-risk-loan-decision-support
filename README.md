@@ -15,6 +15,21 @@ This is not an automated origination engine.
 
 The training book is **fully synthetic**. No real consumer records are used.
 
+## Reproducible holdout results
+
+The committed model was evaluated on 2,400 synthetic records held out before training.
+
+| Metric | Result |
+| --- | ---: |
+| ROC-AUC | 0.7987 |
+| PR-AUC | 0.5722 |
+| F1 at 0.50 threshold | 0.5212 |
+| Recall | 0.6625 |
+| Precision | 0.4295 |
+| Brier score | 0.1691 |
+
+These results measure how well the model recovers patterns from the same synthetic data-generating process. They are not evidence of performance on real applicants. `artifacts/metrics.json` contains the full confusion matrix, ROC points, and subgroup diagnostics.
+
 ## Architecture
 
 ```
@@ -23,7 +38,7 @@ api/                  FastAPI: queue, scoring, explanations, decisions
 scripts/train.py      fit the model and write artifacts/
 scripts/explain_sample.py
 web/                  Next.js underwriter workbench
-artifacts/            fitted pipeline, metrics, sample queue
+artifacts/            generated model files plus committed evaluation metadata
 ```
 
 ## Run locally
@@ -35,7 +50,7 @@ python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 export PYTHONPATH=.
-python scripts/train.py     # skip if artifacts/ already present
+python scripts/train.py     # writes generated model files under artifacts/
 
 python -m uvicorn api.main:app --host 0.0.0.0 --port 45232
 ```
@@ -65,8 +80,18 @@ python scripts/explain_sample.py
 | Explainability | `shap.TreeExplainer`, interventional, probability output |
 | Policy overlay | Score + credit-score + DTI gates → approve / refer / decline |
 | Decisioning | Human underwriter; model never books a loan |
+| Protected attribute handling | Age is excluded from model inputs and retained only for subgroup auditing |
 
-Holdout metrics are written to `artifacts/metrics.json` at train time. Retrain after changing the data generator or hyperparameters.
+The repository keeps the small evaluation and model-card JSON files. The fitted model, SHAP background, and sample review queue are generated locally by `python scripts/train.py` and are intentionally not versioned. The API also trains them automatically if `artifacts/model.joblib` is missing. Retrain after changing the data generator or hyperparameters.
+
+## Limitations
+
+- The dataset is synthetic and does not represent a real lender's population or approval policy.
+- The holdout set comes from the same generator as the training set. External validity is unknown.
+- Group diagnostics cover age bands and employment status only because the synthetic data does not contain race, ethnicity, sex, disability, or other protected attributes.
+- SHAP values explain the fitted model, not whether a recommendation is lawful, fair, or correct.
+- The fixed 0.50 threshold is a demonstration setting, not a production decision threshold.
+- The demo has no identity verification, audit-log storage, model monitoring, or production security controls.
 
 ## Why decision support
 

@@ -22,7 +22,6 @@ NUMERIC_FEATURES = [
     "num_inquiries_6m",
     "public_records",
     "monthly_debt",
-    "age",
 ]
 
 CATEGORICAL_FEATURES = [
@@ -32,7 +31,9 @@ CATEGORICAL_FEATURES = [
     "verification_status",
 ]
 
-ALL_FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
+AUDIT_FEATURES = ["age"]
+MODEL_FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
+ALL_FEATURES = MODEL_FEATURES + AUDIT_FEATURES
 TARGET = "defaulted"
 
 FEATURE_LABELS = {
@@ -48,7 +49,7 @@ FEATURE_LABELS = {
     "num_inquiries_6m": "Inquiries (6 mo)",
     "public_records": "Public records",
     "monthly_debt": "Monthly debt service",
-    "age": "Age",
+    "age": "Age (audit only)",
     "home_ownership": "Housing",
     "loan_purpose": "Loan purpose",
     "employment_status": "Employment",
