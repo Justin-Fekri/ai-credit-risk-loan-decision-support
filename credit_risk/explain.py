@@ -7,13 +7,13 @@ import pandas as pd
 import shap
 
 
-from credit_risk.config import ALL_FEATURES, FEATURE_LABELS, PURPOSE_LABELS
+from credit_risk.config import FEATURE_LABELS, MODEL_FEATURES, PURPOSE_LABELS
 from credit_risk.pipeline import FittedBundle
 
 
 def original_feature_name(transformed_name: str) -> str:
     _, rest = transformed_name.split("__", 1)
-    for feature in ALL_FEATURES:
+    for feature in MODEL_FEATURES:
         if rest == feature or rest.startswith(f"{feature}_"):
             return feature
     return rest
@@ -49,7 +49,7 @@ class CreditExplainer:
         self.bundle = bundle
         self.preprocess = bundle.pipeline.named_steps["preprocess"]
         self.model = bundle.pipeline.named_steps["model"]
-        background_t = self.preprocess.transform(background[ALL_FEATURES])
+        background_t = self.preprocess.transform(background[MODEL_FEATURES])
         self.explainer = shap.TreeExplainer(
             self.model,
             data=background_t,
@@ -59,7 +59,7 @@ class CreditExplainer:
         self.expected_value = float(np.ravel(self.explainer.expected_value)[-1])
 
     def explain_frame(self, frame: pd.DataFrame) -> list[list[dict]]:
-        transformed = self.preprocess.transform(frame[ALL_FEATURES])
+        transformed = self.preprocess.transform(frame[MODEL_FEATURES])
         shap_values = self.explainer.shap_values(transformed)
         if isinstance(shap_values, list):
             shap_values = shap_values[1]

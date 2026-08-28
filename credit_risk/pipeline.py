@@ -9,7 +9,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from xgboost import XGBClassifier
 
-from credit_risk.config import ALL_FEATURES, CATEGORICAL_FEATURES, NUMERIC_FEATURES, TARGET
+from credit_risk.config import CATEGORICAL_FEATURES, MODEL_FEATURES, NUMERIC_FEATURES, TARGET
 
 
 def build_preprocessor() -> ColumnTransformer:
@@ -65,7 +65,7 @@ class FittedBundle:
 
 
 def fit_bundle(frame: pd.DataFrame, random_state: int = 42) -> FittedBundle:
-    X = frame[ALL_FEATURES]
+    X = frame[MODEL_FEATURES]
     y = frame[TARGET].to_numpy()
     pos = max(int(y.sum()), 1)
     neg = max(int(len(y) - pos), 1)
@@ -74,7 +74,7 @@ def fit_bundle(frame: pd.DataFrame, random_state: int = 42) -> FittedBundle:
     transformed = pipe.named_steps["preprocess"].get_feature_names_out()
     return FittedBundle(
         pipeline=pipe,
-        feature_names_in=list(ALL_FEATURES),
+        feature_names_in=list(MODEL_FEATURES),
         transformed_feature_names=list(transformed),
         numeric_features=list(NUMERIC_FEATURES),
         categorical_features=list(CATEGORICAL_FEATURES),
@@ -82,4 +82,4 @@ def fit_bundle(frame: pd.DataFrame, random_state: int = 42) -> FittedBundle:
 
 
 def predict_pd(pipeline: Pipeline, frame: pd.DataFrame) -> np.ndarray:
-    return pipeline.predict_proba(frame[ALL_FEATURES])[:, 1]
+    return pipeline.predict_proba(frame[MODEL_FEATURES])[:, 1]

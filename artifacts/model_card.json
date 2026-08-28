@@ -6,6 +6,13 @@
   "training_rows": 9600,
   "test_rows": 2400,
   "positive_rate_train": 0.2013,
+  "excluded_from_model": [
+    "age"
+  ],
+  "audit_groups": [
+    "age_band",
+    "employment_status"
+  ],
   "decision_support": true,
   "automated_decisioning": false
 }

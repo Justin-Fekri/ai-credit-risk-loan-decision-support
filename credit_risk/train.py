@@ -16,7 +16,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 
-from credit_risk.config import ALL_FEATURES, RANDOM_STATE, TARGET, get_artifacts_dir
+from credit_risk.config import ALL_FEATURES, MODEL_FEATURES, RANDOM_STATE, TARGET, get_artifacts_dir
 from credit_risk.data import generate_borrowers
 from credit_risk.explain import CreditExplainer
 from credit_risk.pipeline import FittedBundle, fit_bundle, predict_pd
@@ -59,6 +59,46 @@ def evaluate(y_true: np.ndarray, pd_hat: np.ndarray, threshold: float = 0.5) -> 
         "confusion": {"tn": int(tn), "fp": int(fp), "fn": int(fn), "tp": int(tp)},
         "roc_curve": roc_points,
         "n_test": int(len(y_true)),
+    }
+
+
+def subgroup_diagnostics(
+    frame: pd.DataFrame,
+    pd_hat: np.ndarray,
+    threshold: float = 0.5,
+) -> dict[str, list[dict]]:
+    """Report group-level error rates for model review, not decisioning."""
+    audit = frame[[TARGET, "age", "employment_status"]].copy()
+    audit["pd_hat"] = pd_hat
+    audit["prediction"] = (pd_hat >= threshold).astype(int)
+    audit["age_band"] = pd.cut(
+        audit["age"],
+        bins=[20, 34, 49, 100],
+        labels=["21-34", "35-49", "50+"],
+        include_lowest=True,
+    ).astype(str)
+
+    def summarize(column: str) -> list[dict]:
+        rows: list[dict] = []
+        for group, values in audit.groupby(column, observed=True):
+            y_true = values[TARGET].to_numpy()
+            y_pred = values["prediction"].to_numpy()
+            tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[0, 1]).ravel()
+            rows.append(
+                {
+                    "group": str(group),
+                    "n": int(len(values)),
+                    "observed_default_rate": round(float(y_true.mean()), 4),
+                    "mean_predicted_pd": round(float(values["pd_hat"].mean()), 4),
+                    "true_positive_rate": round(float(tp / max(tp + fn, 1)), 4),
+                    "false_positive_rate": round(float(fp / max(fp + tn, 1)), 4),
+                }
+            )
+        return rows
+
+    return {
+        "age_band": summarize("age_band"),
+        "employment_status": summarize("employment_status"),
     }
 
 
@@ -124,6 +164,7 @@ def train(
     bundle = fit_bundle(train_df, random_state=random_state)
     pd_test = predict_pd(bundle.pipeline, test_df)
     metrics = evaluate(test_df[TARGET].to_numpy(), pd_test)
+    metrics["subgroup_diagnostics"] = subgroup_diagnostics(test_df, pd_test)
 
     background = train_df.sample(min(100, len(train_df)), random_state=random_state)
     explainer = CreditExplainer(bundle, background)
@@ -148,7 +189,7 @@ def train(
         },
         artifacts_dir / "model.joblib",
     )
-    background[ALL_FEATURES].to_csv(artifacts_dir / "shap_background.csv", index=False)
+    background[MODEL_FEATURES].to_csv(artifacts_dir / "shap_background.csv", index=False)
     (artifacts_dir / "metrics.json").write_text(json.dumps(metrics, indent=2))
     (artifacts_dir / "global_importance.json").write_text(
         json.dumps(importance, indent=2)
@@ -164,6 +205,8 @@ def train(
                 "training_rows": int(len(train_df)),
                 "test_rows": int(len(test_df)),
                 "positive_rate_train": round(float(train_df[TARGET].mean()), 4),
+                "excluded_from_model": ["age"],
+                "audit_groups": ["age_band", "employment_status"],
                 "decision_support": True,
                 "automated_decisioning": False,
             },
