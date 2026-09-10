@@ -107,41 +107,51 @@ def save_metrics(metrics: dict, path: Path) -> Path:
 
 def plot_diagnostics(y_true, y_prob, out_dir: Path = REPORT_DIR) -> list[Path]:
     """ROC curve, precision-recall curve, and a probability calibration plot."""
-    import matplotlib
-
-    matplotlib.use("Agg")  # no GUI needed -- write straight to PNG
     import matplotlib.pyplot as plt
     from sklearn.calibration import calibration_curve
 
+    from .plotting import ACCENT, INK, MUTED, despine, style
+
     out_dir.mkdir(parents=True, exist_ok=True)
-    paths: list[Path] = []
 
     fpr, tpr, _ = roc_curve(y_true, y_prob)
     precision, recall, _ = precision_recall_curve(y_true, y_prob)
     prob_true, prob_pred = calibration_curve(y_true, y_prob, n_bins=10, strategy="quantile")
-
-    fig, axes = plt.subplots(1, 3, figsize=(16, 4.5))
-
-    axes[0].plot(fpr, tpr, lw=2, label=f"AUC = {roc_auc_score(y_true, y_prob):.3f}")
-    axes[0].plot([0, 1], [0, 1], "k--", lw=1)
-    axes[0].set(xlabel="False positive rate", ylabel="True positive rate", title="ROC curve")
-    axes[0].legend()
-
     base_rate = float(np.mean(y_true))
-    axes[1].plot(recall, precision, lw=2,
-                 label=f"AP = {average_precision_score(y_true, y_prob):.3f}")
-    axes[1].axhline(base_rate, ls="--", c="k", lw=1, label=f"base rate = {base_rate:.3f}")
-    axes[1].set(xlabel="Recall", ylabel="Precision", title="Precision-recall curve")
-    axes[1].legend()
+    auc = roc_auc_score(y_true, y_prob)
+    ap = average_precision_score(y_true, y_prob)
 
-    axes[2].plot(prob_pred, prob_true, "o-", lw=2)
-    axes[2].plot([0, 1], [0, 1], "k--", lw=1)
-    axes[2].set(xlabel="Predicted probability", ylabel="Observed default rate",
-                title="Calibration")
+    with style():
+        fig, axes = plt.subplots(1, 3, figsize=(15, 4.6))
 
-    fig.tight_layout()
-    path = out_dir / "diagnostics.png"
-    fig.savefig(path, dpi=140)
-    plt.close(fig)
-    paths.append(path)
-    return paths
+        axes[0].plot(fpr, tpr, lw=2.2, color=ACCENT, label=f"Model (AUC {auc:.3f})")
+        axes[0].plot([0, 1], [0, 1], ls="--", lw=1.2, color=MUTED, label="Random")
+        axes[0].set(xlabel="False positive rate", ylabel="True positive rate",
+                    title="ROC curve", xlim=(0, 1), ylim=(0, 1))
+        axes[0].legend(loc="lower right")
+
+        axes[1].plot(recall, precision, lw=2.2, color=ACCENT, label=f"Model (AP {ap:.3f})")
+        axes[1].axhline(base_rate, ls="--", lw=1.2, color=MUTED,
+                        label=f"Base rate ({base_rate:.1%})")
+        axes[1].set(xlabel="Recall", ylabel="Precision",
+                    title="Precision-recall curve", xlim=(0, 1), ylim=(0, 1))
+        axes[1].legend(loc="upper right")
+
+        axes[2].plot([0, 1], [0, 1], ls="--", lw=1.2, color=MUTED, label="Perfect calibration")
+        axes[2].plot(prob_pred, prob_true, "o-", lw=2.2, color=ACCENT,
+                     markersize=6, label="Model")
+        top = max(prob_pred.max(), prob_true.max()) * 1.1
+        axes[2].set(xlabel="Predicted probability", ylabel="Observed default rate",
+                    title="Calibration", xlim=(0, top), ylim=(0, top))
+        axes[2].legend(loc="upper left")
+
+        for ax in axes:
+            despine(ax)
+            ax.title.set_color(INK)
+
+        fig.tight_layout()
+        path = out_dir / "diagnostics.png"
+        fig.savefig(path, dpi=150, bbox_inches="tight")
+        plt.close(fig)
+
+    return [path]

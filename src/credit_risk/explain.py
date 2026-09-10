@@ -143,24 +143,38 @@ def aggregate_shap(values: np.ndarray, encoded: pd.DataFrame) -> pd.DataFrame:
 
 
 def plot_global_importance(importance: pd.DataFrame, out_dir: Path = REPORT_DIR) -> Path:
-    import matplotlib
-
-    matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+
+    from .plotting import ACCENT, ACCENT_LIGHT, INK, despine, style
 
     out_dir.mkdir(parents=True, exist_ok=True)
     top = importance.head(15).iloc[::-1]
-    label_col = "feature"
     value_col = "importance" if "importance" in top.columns else "mean_abs_shap"
+    labels = [FEATURE_LABELS.get(f, f) for f in top["feature"]]
+    values = top[value_col].to_numpy()
 
-    fig, ax = plt.subplots(figsize=(8, 6))
-    ax.barh([FEATURE_LABELS.get(f, f) for f in top[label_col]], top[value_col])
-    ax.set_xlabel(value_col.replace("_", " "))
-    ax.set_title("Most influential borrower features")
-    fig.tight_layout()
-    path = out_dir / "feature_importance.png"
-    fig.savefig(path, dpi=140)
-    plt.close(fig)
+    with style():
+        fig, ax = plt.subplots(figsize=(9, 6))
+        # Fade the long tail so the eye lands on the drivers that matter.
+        cutoff = values.max() * 0.15
+        colours = [ACCENT if v >= cutoff else ACCENT_LIGHT for v in values]
+        bars = ax.barh(labels, values, color=colours, height=0.72)
+
+        for bar, value in zip(bars, values, strict=True):
+            ax.text(value + values.max() * 0.015, bar.get_y() + bar.get_height() / 2,
+                    f"{value:.4f}", va="center", ha="left", fontsize=8.5, color=INK)
+
+        ax.set_xlabel("Drop in ROC-AUC when the feature is shuffled")
+        ax.set_title("Most influential borrower features", color=INK)
+        ax.set_xlim(0, values.max() * 1.18)
+        ax.grid(axis="y", visible=False)
+        despine(ax)
+
+        fig.tight_layout()
+        path = out_dir / "feature_importance.png"
+        fig.savefig(path, dpi=150, bbox_inches="tight")
+        plt.close(fig)
+
     return path
 
 

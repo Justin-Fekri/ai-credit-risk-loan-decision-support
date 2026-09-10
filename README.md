@@ -1,5 +1,11 @@
 # AI Credit Risk & Loan Decision Support System
 
+[![CI](https://github.com/Justin-Fekri/credit-risk-loan-decision-support/actions/workflows/ci.yml/badge.svg)](https://github.com/Justin-Fekri/credit-risk-loan-decision-support/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-46%20passing-brightgreen.svg)](tests/)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+
 A binary classification pipeline that estimates loan default risk from borrower
 credit history and financial attributes, explains every prediction in plain
 language, and presents the result as **decision support for a human underwriter
@@ -85,6 +91,12 @@ The three are within one standard deviation of each other. That is the honest
 result on this data, and it is why the leaderboard is reported rather than a single
 cherry-picked number.
 
+![Model diagnostics: ROC curve, precision-recall curve, and calibration](docs/images/diagnostics.png)
+
+The calibration panel is the one that matters for decision support: the model's
+predicted probabilities track observed default rates closely, so "30% risk" really
+does mean roughly three defaults in ten.
+
 ### The decision bands actually separate risk
 
 This is the result that matters for the product — the bands the reviewer sees line
@@ -141,6 +153,15 @@ make app
 ```
 
 ---
+
+## What drives the model
+
+![Permutation importance of borrower features](docs/images/feature_importance.png)
+
+Credit score, past delinquencies, debt-to-income and utilisation dominate — exactly
+the relationships the data generator encodes, which is the check that the pipeline
+learned real structure rather than an artefact. `credit-risk explain` also writes a
+SHAP summary table to `reports/`.
 
 ## Fairness audit
 
