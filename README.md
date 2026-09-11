@@ -1,10 +1,18 @@
 # AI Credit Risk & Loan Decision Support System
 
+![CI](https://github.com/Justin-Fekri/ai-credit-risk-loan-decision-support/actions/workflows/ci.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.11+-blue)
+![XGBoost](https://img.shields.io/badge/XGBoost-2.1-orange)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 Python · scikit-learn · XGBoost · Explainable AI (TreeSHAP) · MIT License
 
 A **decision-support** workbench for personal-loan underwriters. An XGBoost classifier estimates 12-month default risk from credit history and financial attributes. TreeSHAP surfaces the borrower features that moved the score. A separate policy layer maps that probability onto approve / refer / decline. **A person still records the decision.**
 
 This is not an automated origination engine.
+
+![The review queue: every file carries a modelled default probability, a risk band, and a policy recommendation the underwriter can override.](docs/risk-desk.png)
+
 
 ## What it does
 
@@ -12,6 +20,12 @@ This is not an automated origination engine.
 - **Default risk & eligibility** — the model outputs P(default); policy rules turn that into a recommendation the underwriter can override.
 - **Feature transparency** — interventional TreeSHAP in probability units, rolled back from one-hot columns to original fields so a reviewer can see *why* a file scored the way it did.
 - **Human in the loop** — the Risk Desk queue lets an underwriter open a file, read the drivers, and approve, refer, or decline with a written rationale.
+
+### Why a file scored the way it did
+
+![Per-applicant TreeSHAP contributions in probability units: bars to the right raise modelled risk, bars to the left lower it, measured against the book average.](docs/explanation.png)
+
+Each contribution is expressed in probability units against the book average, and one-hot columns are rolled back to the original field, so "income verification: not verified" appears as one driver rather than scattered across encoded columns. The policy gate that produced the recommendation is stated in plain language above it.
 
 The training book is **fully synthetic**. No real consumer records are used.
 
@@ -71,6 +85,9 @@ python scripts/explain_sample.py
 ```
 
 ## Model notes
+
+![The model card page: training population, evaluation metrics, and subgroup diagnostics served from the committed artifacts.](docs/model-card.png)
+
 
 | Item | Detail |
 | --- | --- |
