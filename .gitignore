@@ -12,7 +12,6 @@ web/.turbo/
 *.log
 .DS_Store
 assets/
-.cursor/
 artifacts/*
 !artifacts/metrics.json
 !artifacts/model_card.json
